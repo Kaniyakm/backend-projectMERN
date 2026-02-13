@@ -1,0 +1,16 @@
+# Phase 1 Planning Notes
+- API Entities:
+  - User
+  - Budget
+  - Expense
+  - Insights (rule-based)
+- Authentication:
+  - JWT-based login/register
+  - Protected routes
+- Ownership Rules:
+  - User can only access their own budgets
+  - User can only access expenses inside their budgets
+- Endpoints to build in Phase 2:
+  - /api/budgets
+  - /api/expenses
+  - /api/insights
