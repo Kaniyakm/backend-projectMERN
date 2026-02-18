@@ -44,6 +44,9 @@ connectDB();
 // =========================
 const app = express();
 
+// Required for Render — sits behind a proxy
+app.set("trust proxy", 1);
+
 // =========================
 // SECURITY MIDDLEWARE
 // =========================
@@ -62,13 +65,13 @@ app.use(express.json());
 // RATE LIMITERS
 // =========================
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 100,
   message: "Too many requests from this IP, please try again later"
 });
 
 const insightLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
+  windowMs: 60 * 60 * 1000,
   max: 20,
   message: "Insight request limit reached, please try again later"
 });
@@ -78,9 +81,9 @@ const insightLimiter = rateLimit({
 // =========================
 app.use("/api/auth",     authLimiter,    authRoutes);
 app.use("/api/projects",                 projectRoutes);
-app.use("/api/projects",                 taskRoutes);    // Nested: /api/projects/:projectId/tasks
+app.use("/api/projects",                 taskRoutes);
 app.use("/api/budgets",                  budgetRoutes);
-app.use("/api",                          expenseRoutes); // Handles /api/budgets/:id/expenses
+app.use("/api",                          expenseRoutes);
 app.use("/api/insights", insightLimiter, insightRoutes);
 
 // =========================
@@ -99,4 +102,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`);
 });
-
