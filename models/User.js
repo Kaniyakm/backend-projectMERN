@@ -20,10 +20,13 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
 
     // Password will be hashed before saving
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    role: { type: String, enum: ["user", "admin"], default: "user" }
   },
+     
   { timestamps: true }
 );
+    
 
 // -------------------------------
 // 2. Pre-Save Hook: Hash Password

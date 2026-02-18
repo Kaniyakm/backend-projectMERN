@@ -56,6 +56,12 @@ router.get("/:projectId/tasks", auth, async (req, res) => {
 // -------------------------------------------------------
 router.put("/tasks/:taskId", auth, async (req, res) => {
   const task = await Task.findById(req.params.taskId);
+
+  // ✅ FIX: Check if task exists before accessing task.project
+  if (!task) {
+    return res.status(404).json({ message: "Task not found" });
+  }
+
   const project = await Project.findById(task.project);
 
   if (!project || project.user.toString() !== req.user.id) {
@@ -76,6 +82,12 @@ router.put("/tasks/:taskId", auth, async (req, res) => {
 // -------------------------------------------------------
 router.delete("/tasks/:taskId", auth, async (req, res) => {
   const task = await Task.findById(req.params.taskId);
+
+  // ✅ FIX: Check if task exists before accessing task.project
+  if (!task) {
+    return res.status(404).json({ message: "Task not found" });
+  }
+
   const project = await Project.findById(task.project);
 
   if (!project || project.user.toString() !== req.user.id) {
