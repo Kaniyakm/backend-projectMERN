@@ -6,22 +6,24 @@
 //   - Nested expense routes under budgets
 //   - Direct expense update/delete routes
 // ===============================================
-
-const router = require('express').Router();
-const auth = require('../middleware/authMiddleware');
-const {
+// routes/expenseRoutes.js
+import express from "express";
+import auth from "../middleware/authMiddleware.js";
+import {
   createExpense,
   getExpenses,
   updateExpense,
   deleteExpense
-} = require('../controllers/expenseController');
+} from "../controllers/expenseController.js";
+
+const router = express.Router();
 
 // Nested routes
-router.post('/budgets/:budgetId/expenses', auth, createExpense);
-router.get('/budgets/:budgetId/expenses', auth, getExpenses);
+router.post("/budgets/:budgetId/expenses", auth, createExpense);
+router.get("/budgets/:budgetId/expenses", auth, getExpenses);
 
 // Direct expense routes
-router.put('/expenses/:expenseId', auth, updateExpense);
-router.delete('/expenses/:expenseId', auth, deleteExpense);
+router.put("/expenses/:expenseId",    auth, updateExpense);
+router.delete("/expenses/:expenseId", auth, deleteExpense);
 
-module.exports = router;
+export default router;

@@ -76,3 +76,18 @@ const response = await openai.chat.completions.create({
   max_tokens: 250,
   temperature: 0.8
 });
+
+// ✅ Wrap it in an exported function instead
+export const getFinancialAdvice = async (data, openai) => {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: PROFESSIONAL_PROMPT.system },
+      { role: "user", content: PROFESSIONAL_PROMPT.buildUserMessage(data) }
+    ],
+    max_tokens: 250,
+    temperature: 0.8
+  });
+
+  return response.choices[0].message.content;
+};

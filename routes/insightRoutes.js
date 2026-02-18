@@ -7,10 +7,13 @@
 //   - Used by dashboard + budget details
 // ===============================================
 
-const router = require('express').Router();
-const auth = require('../middleware/authMiddleware');
-const { generateInsights } = require('../controllers/insightController');
+// routes/insightRoutes.js
+import express from "express";
+import auth from "../middleware/authMiddleware.js";
+import { generateInsights } from "../controllers/insightController.js";
 
-router.get('/:budgetId', auth, generateInsights);
+const router = express.Router();
 
-module.exports = router;
+router.get("/:budgetId", auth, generateInsights);
+
+export default router;

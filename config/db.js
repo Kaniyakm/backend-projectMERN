@@ -1,19 +1,14 @@
-// backend/config/db.js
-/* 
-  PHASE 1 — DB CONNECTION
-  - Connects to MongoDB Atlas
-  - Called in server.js
-*/
-const mongoose = require('mongoose');
+// config/db.js
+import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('MongoDB connected');
+    console.log("MongoDB connected");
   } catch (err) {
-    console.error(err);
+    console.error("MongoDB connection failed:", err.message);
     process.exit(1);
   }
 };
 
-module.exports = connectDB;
+export default connectDB;

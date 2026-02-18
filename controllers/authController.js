@@ -1,101 +1,73 @@
-// =======================================================
-// PHASE 2 — CORE BACKEND API
-// SECTION 7 — TASK ROUTES
+// backend/controllers/authController.js
+// ===============================================
+// PHASE 1 — AUTH CONTROLLER
+// -----------------------------------------------
 // PURPOSE:
-// - Nested CRUD for Tasks
-// - Must verify ownership of parent project
-// - All routes protected by JWT
-// =======================================================
+//   - Register new users
+//   - Login existing users
+//   - Return JWT token + user info
+// ===============================================
 
-import express from "express";
-import Task from "../models/Task.js";
-import Project from "../models/Project.js";
-import auth from "../middleware/authMiddleware.js";
+import User from "../models/User.js";
+import generateToken from "../utils/generateToken.js";
 
-const router = express.Router();
+// REGISTER
+export const register = async (req, res) => {
+  const { username, email, password } = req.body;
 
-// -------------------------------------------------------
-// CREATE TASK — POST /api/projects/:projectId/tasks
-// Must verify user owns the parent project
-// -------------------------------------------------------
-router.post("/:projectId/tasks", auth, async (req, res) => {
-  const project = await Project.findById(req.params.projectId);
+  try {
+    const exists = await User.findOne({ email });
+    if (exists) return res.status(400).json({ message: "Email already used" });
 
-  if (!project || project.user.toString() !== req.user.id) {
-    return res.status(403).json({ message: "Forbidden" });
+    const user = await User.create({ username, email, password });
+
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      token: generateToken(user._id)
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
+};
 
-  const task = await Task.create({
-    title: req.body.title,
-    description: req.body.description,
-    status: req.body.status,
-    project: req.params.projectId
-  });
+// LOGIN
+export const login = async (req, res) => {
+  const { email, password } = req.body;
 
-  res.status(201).json(task);
-});
+  try {
+    const user = await User.findOne({ email });
+    if (!user || !(await user.isCorrectPassword(password))) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
-// -------------------------------------------------------
-// GET TASKS FOR PROJECT — GET /api/projects/:projectId/tasks
-// Ownership check required
-// -------------------------------------------------------
-router.get("/:projectId/tasks", auth, async (req, res) => {
-  const project = await Project.findById(req.params.projectId);
-
-  if (!project || project.user.toString() !== req.user.id) {
-    return res.status(403).json({ message: "Forbidden" });
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      token: generateToken(user._id)
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
+};
 
-  const tasks = await Task.find({ project: req.params.projectId });
-  res.json(tasks);
-});
+// GET CURRENT USER
+export const me = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
 
-// -------------------------------------------------------
-// UPDATE TASK — PUT /api/tasks/:taskId
-// Must verify ownership of parent project
-// -------------------------------------------------------
-router.put("/tasks/:taskId", auth, async (req, res) => {
-  const task = await Task.findById(req.params.taskId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-  // ✅ FIX: Check if task exists before accessing task.project
-  if (!task) {
-    return res.status(404).json({ message: "Task not found" });
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
-
-  const project = await Project.findById(task.project);
-
-  if (!project || project.user.toString() !== req.user.id) {
-    return res.status(403).json({ message: "Forbidden" });
-  }
-
-  task.title = req.body.title ?? task.title;
-  task.description = req.body.description ?? task.description;
-  task.status = req.body.status ?? task.status;
-
-  await task.save();
-  res.json(task);
-});
-
-// -------------------------------------------------------
-// DELETE TASK — DELETE /api/tasks/:taskId
-// Must verify ownership of parent project
-// -------------------------------------------------------
-router.delete("/tasks/:taskId", auth, async (req, res) => {
-  const task = await Task.findById(req.params.taskId);
-
-  // ✅ FIX: Check if task exists before accessing task.project
-  if (!task) {
-    return res.status(404).json({ message: "Task not found" });
-  }
-
-  const project = await Project.findById(task.project);
-
-  if (!project || project.user.toString() !== req.user.id) {
-    return res.status(403).json({ message: "Forbidden" });
-  }
-
-  await task.deleteOne();
-  res.json({ message: "Task deleted" });
-});
-
-export default router;
+};

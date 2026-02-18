@@ -6,21 +6,23 @@
 //   - Route definitions for budget CRUD
 //   - All routes protected by auth middleware
 // ===============================================
-
-const router = require('express').Router();
-const auth = require('../middleware/authMiddleware');
-const {
+// routes/budgetRoutes.js
+import express from "express";
+import auth from "../middleware/authMiddleware.js";
+import {
   createBudget,
   getBudgets,
   getBudget,
   updateBudget,
   deleteBudget
-} = require('../controllers/budgetController');
+} from "../controllers/budgetController.js";
 
-router.post('/', auth, createBudget);
-router.get('/', auth, getBudgets);
-router.get('/:id', auth, getBudget);
-router.put('/:id', auth, updateBudget);
-router.delete('/:id', auth, deleteBudget);
+const router = express.Router();
 
-module.exports = router;
+router.post("/", auth, createBudget);
+router.get("/", auth, getBudgets);
+router.get("/:id", auth, getBudget);
+router.put("/:id", auth, updateBudget);
+router.delete("/:id", auth, deleteBudget);
+
+export default router;

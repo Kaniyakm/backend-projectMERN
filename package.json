@@ -2,13 +2,16 @@
   "name": "balance-blueprint-backend",
   "version": "1.0.0",
   "description": "Backend API for Budget Blueprint MERN project",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
-    "bcrypt": "^5.1.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^16.3.1",

@@ -9,12 +9,14 @@
 // NOTE:
 //   - You can expand this list anytime
 // ===============================================
-
-module.exports = [
-  { keywords: ['rent', 'mortgage'], category: 'Housing', group: 'Needs' },
-  { keywords: ['grocery', 'groceries', 'food'], category: 'Groceries', group: 'Needs' },
-  { keywords: ['uber', 'lyft', 'gas'], category: 'Transportation', group: 'Needs' },
-  { keywords: ['netflix', 'spotify', 'hulu'], category: 'Entertainment', group: 'Wants' },
-  { keywords: ['starbucks', 'coffee'], category: 'Dining', group: 'Wants' },
-  { keywords: ['transfer', 'savings'], category: 'Savings Transfer', group: 'Savings' }
+// utils/categoryMap.js
+const categoryMap = [
+  { keywords: ["rent", "mortgage"],              category: "Housing",          group: "Needs"   },
+  { keywords: ["grocery", "groceries", "food"],  category: "Groceries",        group: "Needs"   },
+  { keywords: ["uber", "lyft", "gas"],           category: "Transportation",   group: "Needs"   },
+  { keywords: ["netflix", "spotify", "hulu"],    category: "Entertainment",    group: "Wants"   },
+  { keywords: ["starbucks", "coffee"],           category: "Dining",           group: "Wants"   },
+  { keywords: ["transfer", "savings"],           category: "Savings Transfer", group: "Savings" }
 ];
+
+export default categoryMap;
