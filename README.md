@@ -98,17 +98,7 @@ Balance Blueprint backend is a Node.js/Express REST API that handles user authen
 * `PUT /api/tasks/:taskId` — Update task
 * `DELETE /api/tasks/:taskId` — Delete task
 
-## Environment Variables
 
-Create a `.env` file in the root of the backend directory:
-
-```
-MONGO_URI=your_mongodb_atlas_connection_string
-JWT_SECRET=your_jwt_secret_key
-FRONTEND_URL=https://your-frontend-url.onrender.com
-NODE_ENV=production
-PORT=5000
-```
 
 ## Project Next Steps
 
