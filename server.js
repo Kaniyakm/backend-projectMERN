@@ -27,8 +27,7 @@ connectDB();
 // INIT APP
 const app = express();
 
-// 💡 Render requires trust proxy,
-// but to avoid rate-limit warnings use 1 instead of true
+// Render requires trust proxy
 app.set("trust proxy", 1);
 
 // SECURITY
@@ -40,6 +39,9 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+// ✅ HEALTH CHECK — keeps Render free tier awake (ping this with UptimeRobot)
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 // RATE LIMITERS
 const authLimiter = rateLimit({
